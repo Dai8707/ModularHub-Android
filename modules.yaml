@@ -1,0 +1,96 @@
+# ModularHub 组件清单（项目根目录）
+# 壳工程只维护集成配置；业务项目在独立 Git 仓，通过 syncModules 拉到 modules/ 目录。
+# Gradle Sync 不会自动拉代码，需先执行: ./gradlew syncModules
+#
+# 命名说明：
+# - modules/project-xxx/     → 独立 Git 项目（含 app + feature-xxx）
+# - modules.yaml 里的 name   → 壳集成用的业务 Library（feature-xxx）
+
+defaults:
+  mode: source
+  git:
+    ref: main
+  maven:
+    group_prefix: com.modularhub
+
+profile: dev
+
+profiles:
+  personal:
+    defaults:
+      mode: source
+  dev:
+    defaults:
+      mode: source
+  staging:
+    defaults:
+      mode: aar
+  release:
+    defaults:
+      mode: aar
+
+modules:
+  - name: feature-main
+    type: feature
+    enabled: true
+    git:
+      url: "PLACEHOLDER/git@github.com:your-org/project-main.git"
+      ref: main
+    source:
+      path: modules/project-main/feature-main
+      gradle_path: :feature-main
+    aar:
+      artifact: feature-main
+      version: 1.0.0
+
+  - name: feature-home
+    type: feature
+    enabled: true
+    git:
+      url: "PLACEHOLDER/git@github.com:your-org/project-home.git"
+      ref: main
+    source:
+      path: modules/project-home/feature-home
+      gradle_path: :feature-home
+    aar:
+      artifact: feature-home
+      version: 1.0.0
+
+  - name: feature-category
+    type: feature
+    enabled: true
+    git:
+      url: "PLACEHOLDER/git@github.com:your-org/project-category.git"
+      ref: main
+    source:
+      path: modules/project-category/feature-category
+      gradle_path: :feature-category
+    aar:
+      artifact: feature-category
+      version: 1.0.0
+
+  - name: feature-cart
+    type: feature
+    enabled: true
+    git:
+      url: "PLACEHOLDER/git@github.com:your-org/project-cart.git"
+      ref: main
+    source:
+      path: modules/project-cart/feature-cart
+      gradle_path: :feature-cart
+    aar:
+      artifact: feature-cart
+      version: 1.0.0
+
+  - name: feature-mine
+    type: feature
+    enabled: true
+    git:
+      url: "PLACEHOLDER/git@github.com:your-org/project-mine.git"
+      ref: main
+    source:
+      path: modules/project-mine/feature-mine
+      gradle_path: :feature-mine
+    aar:
+      artifact: feature-mine
+      version: 1.0.0

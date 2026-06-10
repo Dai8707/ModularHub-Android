@@ -1,0 +1,21 @@
+*.iml
+.gradle
+/local.properties
+/.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.ap_
+*.aab
+
+# 本地 YAML 覆盖（个人联调）
+/local.override.yaml
+
+# 组件源码由 syncModules 拉取，不提交到壳仓
+/modules/*
+!/modules/README.md
+
+/repos/

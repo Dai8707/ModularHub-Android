@@ -1,0 +1,12 @@
+# 复制为 local.override.yaml 后生效（该文件已被 .gitignore 忽略）
+
+profile: personal
+
+modules:
+  - name: feature-home
+    mode: source
+    git:
+      ref: feature/home-banner
+
+  - name: feature-category
+    mode: aar

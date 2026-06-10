@@ -1,0 +1,49 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'org.jetbrains.kotlin.jvm' version '2.0.21'
+}
+
+group = 'com.modularhub.gradle'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'org.yaml:snakeyaml:2.3'
+}
+
+gradlePlugin {
+    plugins {
+        register('modularHubSettings') {
+            id = 'modularhub.settings'
+            implementationClass = 'com.modularhub.gradle.ModularHubSettingsPlugin'
+        }
+        register('modularHubRoot') {
+            id = 'modularhub.root'
+            implementationClass = 'com.modularhub.gradle.ModularHubRootPlugin'
+        }
+        register('modularHubDeps') {
+            id = 'modularhub.deps'
+            implementationClass = 'com.modularhub.gradle.ModularHubDepsPlugin'
+        }
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    sourceCompatibility = JavaVersion.VERSION_17.toString()
+    targetCompatibility = JavaVersion.VERSION_17.toString()
+}
