@@ -63,7 +63,7 @@ project-main/                  ← 主框架项目（MainActivity、BottomNav）
 
 ---
 
-## 同事只 clone 壳子，怎么跑起来？
+## 只 clone 壳子，怎么跑起来？
 
 **Gradle Sync 不会自动拉组件代码。** 需要按编译模式选择：
 
