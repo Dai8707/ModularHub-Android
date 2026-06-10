@@ -34,7 +34,7 @@ modules:
     type: feature
     enabled: true
     git:
-      url: "PLACEHOLDER/git@github.com:your-org/project-main.git"
+      url: "git@github.com:Dai8707/project-main.git"
       ref: main
     source:
       path: modules/project-main/feature-main
@@ -47,7 +47,7 @@ modules:
     type: feature
     enabled: true
     git:
-      url: "PLACEHOLDER/git@github.com:your-org/project-home.git"
+      url: "git@github.com:Dai8707/project-home.git"
       ref: main
     source:
       path: modules/project-home/feature-home
@@ -60,7 +60,7 @@ modules:
     type: feature
     enabled: true
     git:
-      url: "PLACEHOLDER/git@github.com:your-org/project-category.git"
+      url: "git@github.com:Dai8707/project-category.git"
       ref: main
     source:
       path: modules/project-category/feature-category
@@ -73,7 +73,7 @@ modules:
     type: feature
     enabled: true
     git:
-      url: "PLACEHOLDER/git@github.com:your-org/project-cart.git"
+      url: "git@github.com:Dai8707/project-cart.git"
       ref: main
     source:
       path: modules/project-cart/feature-cart
@@ -86,7 +86,7 @@ modules:
     type: feature
     enabled: true
     git:
-      url: "PLACEHOLDER/git@github.com:your-org/project-mine.git"
+      url: "git@github.com:Dai8707/project-mine.git"
       ref: main
     source:
       path: modules/project-mine/feature-mine
