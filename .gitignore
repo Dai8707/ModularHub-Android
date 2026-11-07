@@ -14,7 +14,7 @@
 # 本地 YAML 覆盖（个人联调）
 /local.override.yaml
 
-# 组件源码由 syncModules 拉取，不提交到壳仓
+# 组件源码由 Gradle Sync 自动 clone，不提交到壳仓
 /modules/*
 !/modules/README.md
 

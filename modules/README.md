@@ -1,38 +1,32 @@
 # modules/
 
-本目录是 **业务项目（独立 Git 仓）的本地落地目录**，由 `./gradlew syncModules` 拉取。
+业务项目（独立 Git 仓）的本地落地目录，缺仓时由 Gradle Sync 自动 clone。壳仓 **不提交** 此目录内容。
 
-壳工程 **不会提交** 此目录下的项目内容（见壳仓 `.gitignore`）。
-
-## 标准结构（每个业务项目）
+## 结构
 
 ```
 modules/project-xxx/
-├── .gitignore
-├── settings.gradle
-├── app/                    ← 独立运行调试
-└── feature-xxx/            ← 业务 Library（壳集成）
+├── app/              ← 独立运行调试
+└── feature-xxx/      ← 打成带版本号的 AAR，壳按坐标依赖
 ```
 
-## 项目清单
+## 清单
 
 | 项目 | Library | 职责 |
 |------|---------|------|
-| `project-main` | `feature-main` | **主框架**：MainActivity、BottomNav、Tab 调度 |
-| `project-home` | `feature-home` | 首页 Tab |
-| `project-category` | `feature-category` | 分类 Tab |
-| `project-cart` | `feature-cart` | 购物车 Tab |
-| `project-mine` | `feature-mine` | 我的 Tab |
+| `project-main` | `feature-main` | MainActivity、BottomNav |
+| `project-home` | `feature-home` | 首页 |
+| `project-category` | `feature-category` | 分类 |
+| `project-cart` | `feature-cart` | 购物车 |
+| `project-mine` | `feature-mine` | 我的 |
 
-## 壳工程依赖关系
+## 依赖
 
-```
-壳 app（仅 Application + 打包）
-  └── feature-main
-        ├── feature-home
-        ├── feature-category
-        ├── feature-cart
-        └── feature-mine
+壳 **不 include** 这些模块。本地改完后：
+
+```bash
+./gradlew publishModules   # → mavenLocal，版本来自 modules.yaml
+./gradlew :app:assembleDebug
 ```
 
-`modules.yaml` 中需声明 **全部 feature**（供 settings include），壳 `app/build.gradle` **只引 `feature-main`**。
+壳 `app` 只声明 `feature-main`；Tab 版本坐标写在 `feature-main` 的依赖里，并与 YAML 对齐。

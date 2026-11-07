@@ -1,10 +1,18 @@
 # ModularHub 组件清单（项目根目录）
-# 壳工程只维护集成配置；业务项目在独立 Git 仓，通过 syncModules 拉到 modules/ 目录。
-# Gradle Sync 不会自动拉代码，需先执行: ./gradlew syncModules
+# 壳工程只维护集成配置；业务项目在独立 Git 仓，缺仓时由 Gradle Sync 自动 clone 到 modules/。
 #
-# 命名说明：
-# - modules/project-xxx/     → 独立 Git 项目（含 app + feature-xxx）
-# - modules.yaml 里的 name   → 壳集成用的业务 Library（feature-xxx）
+# 关键约定：
+# - enabled：这条是否参与集成
+# - mode=source：缺仓时自动拉到本地，方便改代码；不改成 project() 依赖
+# - mode=aar：不拉仓库；依赖仍按 aar.version 走 Maven
+# - 本地 / CI 打包一律使用带版本号的坐标，不用 implementation project(...)
+#
+# 本地联调：
+#   1. ~/.gradle/gradle.properties 配置 gpr.user / gpr.token（见 docs/GITHUB_PACKAGES.md）
+#   2. ./gradlew :app:assembleDebug   # source 缺仓会自动 clone
+#   3. 改完源码后 ./gradlew publishModules
+#   关闭自动拉：gradle.properties 写 modularHub.autoSync=false
+
 
 defaults:
   mode: source
@@ -12,6 +20,8 @@ defaults:
     ref: main
   maven:
     group_prefix: com.modularhub
+    # 包挂在壳仓下；解析顺序：mavenLocal → 此仓库 → google / mavenCentral
+    repository: "https://maven.pkg.github.com/Dai8707/ModularHub-Android"
 
 profile: dev
 

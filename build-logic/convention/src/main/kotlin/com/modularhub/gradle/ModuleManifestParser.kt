@@ -9,7 +9,7 @@ object ModuleManifestParser {
     private const val MANIFEST_FILE = "modules.yaml"
     private const val LOCAL_OVERRIDE_FILE = "local.override.yaml"
 
-    fun load(rootDir: File): List<ResolvedModule> {
+    fun load(rootDir: File): ModuleManifest {
         val manifestFile = rootDir.resolve(MANIFEST_FILE)
         require(manifestFile.isFile) {
             "Module manifest not found: ${manifestFile.absolutePath}"
@@ -31,13 +31,13 @@ object ModuleManifestParser {
 
         val mavenDefaults = defaults["maven"] as? Map<*, *> ?: emptyMap<String, Any>()
         val groupPrefix = mavenDefaults["group_prefix"]?.toString() ?: "com.modularhub"
-        val repository = mavenDefaults["repository"]?.toString()
+        val repository = mavenDefaults["repository"]?.toString()?.takeIf { it.isNotBlank() }
 
         val modulesRaw = manifest["modules"] as? List<*> ?: emptyList<Any>()
         val overrideModules = (override?.get("modules") as? List<*>)?.filterIsInstance<Map<*, *>>() ?: emptyList()
         val overrideByName = overrideModules.associateBy { it["name"].toString() }
 
-        return modulesRaw.filterIsInstance<Map<*, *>>().map { moduleMap ->
+        val modules = modulesRaw.filterIsInstance<Map<*, *>>().map { moduleMap ->
             val name = moduleMap["name"]?.toString()
                 ?: error("Each module entry must define 'name'")
 
@@ -82,13 +82,24 @@ object ModuleManifestParser {
                 artifact = aarMap["artifact"]?.toString() ?: name,
                 version = aarMap["version"]?.toString(),
                 gitUrl = gitMap["url"]?.toString(),
-                gitRef = gitMap["ref"]?.toString() ?: defaults["git"]?.let { (it as Map<*, *>)["ref"]?.toString() },
+                gitRef = gitMap["ref"]?.toString()
+                    ?: defaults["git"]?.let { (it as Map<*, *>)["ref"]?.toString() },
             )
-        }.also { modules ->
-            if (repository.isNullOrBlank()) {
-                // Maven repository is optional until AAR mode is used in CI.
+        }
+
+        if (profile == "release") {
+            val sourceEnabled = modules.filter { it.enabled && it.mode == ModuleMode.SOURCE }
+            require(sourceEnabled.isEmpty()) {
+                "release profile forbids source mode. Still source: " +
+                    sourceEnabled.joinToString { it.name }
             }
         }
+
+        return ModuleManifest(
+            profile = profile,
+            mavenRepository = repository,
+            modules = modules,
+        )
     }
 
     private fun parseYamlFile(file: File): Map<String, Any> {

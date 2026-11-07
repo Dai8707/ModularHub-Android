@@ -38,7 +38,11 @@ open class ModularHubExtension(
         project.dependencies.add("debugImplementation", resolve(name))
     }
 
-    private fun resolve(name: String): Any {
+    /**
+     * 一律解析成带版本号的 Maven 坐标，不使用 project()。
+     * mode=source 只决定是否把源码拉到本地，不改变依赖解析方式。
+     */
+    private fun resolve(name: String): String {
         val module = modules.firstOrNull { it.name == name }
             ?: error("Module '$name' not found in modules.yaml")
 
@@ -46,15 +50,13 @@ open class ModularHubExtension(
             throw IllegalStateException("Module '$name' is disabled in modules.yaml")
         }
 
-        return when (module.mode) {
-            ModuleMode.SOURCE -> project.project(module.gradlePath)
-            ModuleMode.AAR -> {
-                val version = module.version
-                    ?: error("Module '$name' is in aar mode but aar.version is missing")
-                val artifact = module.artifact
-                    ?: error("Module '$name' is in aar mode but aar.artifact is missing")
-                "${module.mavenGroup}:$artifact:$version"
-            }
+        require(!module.version.isNullOrBlank()) {
+            "Module '$name' must declare aar.version (local and remote both use versioned coordinates)"
         }
+        require(!module.artifact.isNullOrBlank()) {
+            "Module '$name' must declare aar.artifact"
+        }
+
+        return module.coordinate
     }
 }

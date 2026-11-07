@@ -15,6 +15,12 @@ enum class ModuleMode {
     }
 }
 
+data class ModuleManifest(
+    val profile: String,
+    val mavenRepository: String?,
+    val modules: List<ResolvedModule>,
+)
+
 data class ResolvedModule(
     val name: String,
     val type: String,
@@ -28,6 +34,20 @@ data class ResolvedModule(
     val gitUrl: String?,
     val gitRef: String?,
 ) {
+    val coordinate: String
+        get() {
+            val artifactId = artifact ?: error("Module '$name' is missing aar.artifact")
+            val ver = version ?: error("Module '$name' is missing aar.version")
+            return "$mavenGroup:$artifactId:$ver"
+        }
+
+    /** Git 仓库落地目录：source.path 指向 library 子模块，仓库根是其父目录。 */
+    val gitRepoRelativePath: String?
+        get() = projectDirRelativePath?.let { path ->
+            val file = java.io.File(path)
+            file.parent?.replace('\\', '/')
+        }
+
     val isPlaceholderGit: Boolean
         get() = gitUrl.isNullOrBlank() ||
             gitUrl.contains("PLACEHOLDER", ignoreCase = true) ||

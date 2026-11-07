@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace 'com.modularhub.app'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId 'com.modularhub.app'
         minSdk 24
-        targetSdk 35
+        targetSdk 36
         versionCode 1
         versionName '1.0.0'
     }
@@ -33,7 +33,7 @@ android {
     }
 }
 
-// 壳 app 只依赖主框架；Tab 由 feature-main 内部编排，但需在 modules.yaml 中 include
+// ?? app ????????????????? com.modularhub:feature-main:<yaml.version>
 modularHub {
     implementation 'feature-main'
 }
@@ -42,4 +42,24 @@ dependencies {
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
+}
+
+// Android Studio Gradle ??��app > Tasks > modularhub ?????????
+['publishModules', 'listModules', 'validateModulesYaml'].each { taskName ->
+    tasks.register(taskName) {
+        group = 'modularhub'
+        dependsOn rootProject.tasks.named(taskName)
+    }
+}
+
+tasks.named('publishModules') {
+    description = 'Publish source-mode modules to mavenLocal / GitHub Packages'
+}
+
+tasks.named('listModules') {
+    description = '??? modules.yaml ????? mode / ???? / ��??'
+}
+
+tasks.named('validateModulesYaml') {
+    description = '��?? modules.yaml ?????????'
 }
