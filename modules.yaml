@@ -3,7 +3,7 @@
 #
 # 关键约定：
 # - enabled：这条是否参与集成
-# - mode=source：缺仓时自动拉到本地，方便改代码；不改成 project() 依赖
+# - mode=source：缺仓时自动拉到 modules/，方便改代码；不改成 project() 依赖
 # - mode=aar：不拉仓库；依赖仍按 aar.version 走 Maven
 # - 本地 / CI 打包一律使用带版本号的坐标，不用 implementation project(...)
 #

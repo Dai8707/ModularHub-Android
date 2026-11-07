@@ -3,10 +3,8 @@ package com.modularhub.gradle
 import java.io.File
 
 /**
- * 只登记壳工程自己为 Git 根，并清掉 modules 下嵌套映射。
- *
- * `modules/project-*` 在壳仓 gitignore 内时，Android Studio 若登记为嵌套 VCS 根，
- * 会报 “Invalid VCS root mappings”（即使本地 .git 可用）。
+ * 只登记壳工程 Git 根。
+ * 组件仍在 modules/ 下且被壳仓 ignore，不登记嵌套根（否则 Android Studio 报 Invalid）。
  */
 object IdeaVcsMappings {
 
@@ -15,7 +13,6 @@ object IdeaVcsMappings {
         ideaDir.mkdirs()
         val file = ideaDir.resolve("vcs.xml")
         val projectDirToken = "\$PROJECT_DIR$"
-
         file.writeText(
             """
             |<?xml version="1.0" encoding="UTF-8"?>
@@ -27,6 +24,5 @@ object IdeaVcsMappings {
             |
             """.trimMargin(),
         )
-        println("[modularhub] wrote .idea/vcs.xml (shell root only)")
     }
 }

@@ -27,7 +27,7 @@
 ## 3. 本地流程
 
 ```
-Gradle Sync（缺仓自动 clone）→ publishModules → :app:assembleDebug
+Gradle Sync（缺仓自动 clone 到 modules/）→ publishModules → :app:assembleDebug
 ```
 
 

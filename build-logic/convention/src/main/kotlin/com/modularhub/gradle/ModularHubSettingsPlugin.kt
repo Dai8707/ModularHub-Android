@@ -32,7 +32,7 @@ class ModularHubSettingsPlugin : Plugin<Settings> {
                 modules = manifest.modules,
             )
         }
-        // 清掉可能残留的嵌套 VCS 映射（gitignore 下的 modules 不能登记，否则 IDE 报 Invalid）
+        // 只登记壳根。modules/ 被壳仓 ignore，不能再挂嵌套 VCS（会 Invalid），目录结构也不改。
         IdeaVcsMappings.write(rootDir)
 
         settings.dependencyResolutionManagement.repositories { repos ->

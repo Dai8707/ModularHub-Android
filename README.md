@@ -91,7 +91,7 @@ ModularHub-Android/
 ├── app/                 # Application + 打包
 ├── build-logic/         # YAML 解析、坐标依赖、publish Task
 ├── modules.yaml
-├── modules/             # 自动 clone 落地，不提交
+├── modules/             # 自动 clone 落地，壳仓忽略
 └── docs/
 ```
 
