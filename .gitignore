@@ -1,7 +1,6 @@
 *.iml
 .gradle
 /local.properties
-/.idea/
 .DS_Store
 /build
 /captures
@@ -11,10 +10,14 @@
 *.ap_
 *.aab
 
+# IDE：只共享嵌套 Git 根映射，其余 .idea 仍本地
+.idea/*
+!.idea/vcs.xml
+
 # 本地 YAML 覆盖（个人联调）
 /local.override.yaml
 
-# 组件源码由 Gradle Sync 自动 clone，不提交到壳仓
+# 组件源码由 Gradle Sync 自动 clone，不提交到壳仓（各仓自有 remote）
 /modules/*
 !/modules/README.md
 

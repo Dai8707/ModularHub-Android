@@ -1,6 +1,8 @@
 # modules/
 
-业务项目（独立 Git 仓）的本地落地目录，缺仓时由 Gradle Sync 自动 clone。壳仓 **不提交** 此目录内容。
+业务项目（独立 Git 仓）的本地落地目录，缺仓时由 Gradle Sync 自动 clone。壳仓 **不提交** 此目录内容（仍在壳的 `.gitignore` 里）。
+
+Gradle Sync 会写 `.idea/vcs.xml`，把各 `project-*` 注册成嵌套 Git 根，这样 Android Studio 里应按**组件自己的仓库**显示白色/改动色，而不是整片 Ignored 橄榄色。若仍不对：File → Invalidate Caches / 重开工程，或 Settings → Version Control 看 Directory Mappings。
 
 ## 结构
 
