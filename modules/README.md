@@ -2,7 +2,7 @@
 
 业务项目（独立 Git 仓）的本地落地目录，缺仓时由 Gradle Sync 自动 clone。壳仓 **不提交** 此目录内容（仍在壳的 `.gitignore` 里）。
 
-Gradle Sync 会写 `.idea/vcs.xml`，把各 `project-*` 注册成嵌套 Git 根，这样 Android Studio 里应按**组件自己的仓库**显示白色/改动色，而不是整片 Ignored 橄榄色。若仍不对：File → Invalidate Caches / 重开工程，或 Settings → Version Control 看 Directory Mappings。
+Gradle Sync 在组件 **clone 完成并校验 git 可用后**，才会本地生成 `.idea/vcs.xml` 嵌套 Git 根（不提交到壳仓）。这样 Android Studio 里组件目录是正常 VCS 色，又不会在目录尚未就绪时报 Invalid VCS root。若仍看到该提示：点 Configure 清掉无效项，再 Sync / 重开工程。
 
 ## 结构
 

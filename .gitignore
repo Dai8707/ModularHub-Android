@@ -10,9 +10,8 @@
 *.ap_
 *.aab
 
-# IDE：只共享嵌套 Git 根映射，其余 .idea 仍本地
-.idea/*
-!.idea/vcs.xml
+# IDE 本地文件（vcs.xml 由 Gradle Sync 在 clone 后生成，勿提交预登记路径）
+.idea/
 
 # 本地 YAML 覆盖（个人联调）
 /local.override.yaml

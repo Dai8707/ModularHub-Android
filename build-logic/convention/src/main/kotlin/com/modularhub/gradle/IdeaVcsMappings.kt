@@ -3,8 +3,9 @@ package com.modularhub.gradle
 import java.io.File
 
 /**
- * 把 source 模式组件仓注册为 IDE 嵌套 Git 根。
- * 壳仓仍 gitignore `modules/*`，但 Android Studio 会按各组件自己的仓库显示颜色/状态，而不是整片 Ignored。
+ * 把已落地且 git 可用的 source 组件仓注册为 IDE 嵌套 Git 根。
+ * 仅在本地生成 .idea/vcs.xml（不提交），避免壳仓里预登记尚不存在的路径导致
+ * “Invalid VCS root mappings”。
  */
 object IdeaVcsMappings {
 
@@ -14,7 +15,7 @@ object IdeaVcsMappings {
             .mapNotNull { it.gitRepoRelativePath }
             .distinct()
             .map { rootDir.resolve(it) }
-            .filter { it.resolve(".git").exists() }
+            .filter { isUsableGitWorkTree(it) }
             .sortedBy { it.invariantSeparatorsPath }
 
         val ideaDir = rootDir.resolve(".idea")
@@ -41,5 +42,25 @@ object IdeaVcsMappings {
             """.trimMargin(),
         )
         println("[modularhub] wrote .idea/vcs.xml (${repoDirs.size} nested git roots)")
+    }
+
+    /** 仅目录存在不够：必须是可用的 git work tree，否则 IDE 会报 Invalid VCS root。 */
+    private fun isUsableGitWorkTree(repoDir: File): Boolean {
+        if (!repoDir.isDirectory || !repoDir.resolve(".git").exists()) return false
+        return try {
+            val process = ProcessBuilder(
+                "git",
+                "-C",
+                repoDir.absolutePath,
+                "rev-parse",
+                "--is-inside-work-tree",
+            )
+                .redirectErrorStream(true)
+                .start()
+            val output = process.inputStream.bufferedReader().readText().trim()
+            process.waitFor() == 0 && output.equals("true", ignoreCase = true)
+        } catch (_: Exception) {
+            false
+        }
     }
 }
