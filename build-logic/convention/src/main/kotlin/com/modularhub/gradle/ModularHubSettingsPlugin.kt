@@ -27,13 +27,14 @@ class ModularHubSettingsPlugin : Plugin<Settings> {
             .orElse(true)
             .get()
         if (autoSync) {
+            // 先清掉嵌套映射，等目录都拉完再登记，避免空窗期被 IDE 判无效
+            IdeaVcsMappings.writeShellOnly(rootDir)
             ModuleGitSync.syncSourceModules(
                 rootDir = rootDir,
                 modules = manifest.modules,
             )
         }
-        // 只登记壳根。modules/ 被壳仓 ignore，不能再挂嵌套 VCS（会 Invalid），目录结构也不改。
-        IdeaVcsMappings.write(rootDir)
+        IdeaVcsMappings.write(rootDir, manifest.modules)
 
         settings.dependencyResolutionManagement.repositories { repos ->
             configureRepositories(settings, repos, manifest.mavenRepository)
