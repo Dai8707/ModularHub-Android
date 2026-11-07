@@ -32,8 +32,8 @@ class ModularHubSettingsPlugin : Plugin<Settings> {
                 modules = manifest.modules,
             )
         }
-        // 无论是否 autoSync：让 IDE 把已落地的 source 仓当成独立 Git 根（避免整片 Ignored 色）
-        IdeaVcsMappings.write(rootDir, manifest.modules)
+        // 清掉可能残留的嵌套 VCS 映射（gitignore 下的 modules 不能登记，否则 IDE 报 Invalid）
+        IdeaVcsMappings.write(rootDir)
 
         settings.dependencyResolutionManagement.repositories { repos ->
             configureRepositories(settings, repos, manifest.mavenRepository)
